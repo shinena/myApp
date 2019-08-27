@@ -1,11 +1,28 @@
 import Nerv from "nervjs";
-import { Component } from "@tarojs/taro-h5";
+import * as tslib_1 from "tslib";
+import { Component, useState } from "@tarojs/taro-h5";
 import { View, Text, Button } from '@tarojs/components';
-import MyComponent from '../Text/Text';
+import { connect } from "@tarojs/redux-h5";
 import './index.scss';
-import Tab from '../../components/tab/tab';
+import PagePicker from '../../components/Picker/Picker';
+import PageView from '../../components/Slider/Slider';
+import { AtButton, AtFab, AtCalendar } from 'taro-ui';
 // !!! 组件引入路径直到文件名，而不是文件夹
-export default class Index extends Component {
+import CounterComponent from '../counter/CounterComponent';
+import { add, minus, asyncAdd } from '../../actions/counter';
+let Index =
+// function mapStateToProps(state) {
+//   return {
+//     counter: state.counter.toJS()
+//   }
+// }
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     ...bindActionCreators(Actions, dispatch)
+//   }
+// }
+// @connect(mapStateToProps, mapDispatchToProps)
+class Index extends Component {
   /**
    * 指定config的类型声明为: Taro.Config
    *
@@ -39,18 +56,34 @@ export default class Index extends Component {
   // 页面隐藏/切入后台时触发， 如 navigateTo 或底部 tab 切换到其他页面，小程序切入后台等
   componentDidHide() {}
   render() {
+    const [count, setCount] = useState(0);
+    console.log(count, '5888');
     return <View className="index">
         <Text>Hello world</Text>
-        <View className="title">{this.state.title}</View>
-        <View className="content">
-          {this.state.list.map(item => {
-          return <View className="item" key={item.id}>{item}</View>;
-        })}
-          <Button className="add" onClick={this.add}>添加</Button>
+        <View className="todo">
+        <Button className="add_btn" onClick={this.props.add}>+</Button>
+        <Button className="dec_btn" onClick={this.props.dec}>-</Button>
+        <Button className="dec_btn" onClick={this.props.asyncAdd}>async</Button>
+        <View>{this.props.counter.num}</View>
+        
         </View>
+        <CounterComponent />
+        <PagePicker />
+        <PageView />
+        <AtCalendar isMultiSelect currentDate={{ start: '2018/10/28', end: '2018/11/11' }} />
+        <AtFab>
+          <Text className="at-fab__icon at-icon at-icon-menu"></Text>
+        </AtFab>
+        <AtButton className="my-button" type="primary">按钮文案</AtButton>
+        
+        
+        
+        
 
-      <MyComponent isEnable={true} />
-      <Tab></Tab>
+      
+      
+      
+      
       </View>;
   }
   config = {
@@ -60,4 +93,30 @@ export default class Index extends Component {
   add = e => {
     //
   };
-}
+};
+Index = tslib_1.__decorate([connect(({ counter }) => ({
+  counter
+}), dispatch => ({
+  add() {
+    dispatch(add());
+  },
+  dec() {
+    dispatch(minus());
+  },
+  asyncAdd() {
+    dispatch(asyncAdd());
+  }
+}))
+// function mapStateToProps(state) {
+//   return {
+//     counter: state.counter.toJS()
+//   }
+// }
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     ...bindActionCreators(Actions, dispatch)
+//   }
+// }
+// @connect(mapStateToProps, mapDispatchToProps)
+], Index);
+export default Index;

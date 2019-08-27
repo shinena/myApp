@@ -1,7 +1,5 @@
-import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
-
-import './index.scss'
+import Taro, {Component, Config} from '@tarojs/taro'
+import {View, Text} from '@tarojs/components'
 
 class MyComponent extends Component {
 
@@ -13,21 +11,35 @@ class MyComponent extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   static defaultProps = {
-    isEnable: true
+    isEnable: true,
+    number: 5
   }
   state = {
     myTime: 12
   }
-  
-  clickHandler(e){
+
+  clickHandler(e) {
     console.log(e)
   }
-  render () {
-    const { isEnable } = this.props     // ✓ 正确
-    const { myTime } = this.state     // ✓ 正确
+  render() {
+    const {isEnable, number} = this.props // ✓ 正确
+    const {myTime} = this.state // ✓ 正确
+    const todos = ['finish doc', 'submit pr', 'nag dan to review'];
+
+    let description
+    if (number % 2 == 0) {
+      description = <Text>even</Text>
+    } else {
+      description = <Text>odd</Text>
+    }
+
     return (
       <View className='test' onClick={this.clickHandler}>
         {isEnable && <Text className='test_text'>{myTime}</Text>}
+        <View>{number} is an {description} number</View>
+        <ul>
+          {todos.map((todo) => <li><Text>{todo}</Text></li>)}
+        </ul>
       </View>
     )
   }

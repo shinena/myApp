@@ -1,10 +1,52 @@
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { Component, Config, useState } from '@tarojs/taro'
 import { View, Text, Button } from '@tarojs/components'
+import { connect } from '@tarojs/redux'
+import * as Actions from '../../actions/counter'
+import { bindActionCreators } from 'redux'
 
 import MyComponent from '../Text/Text'
+import Clock from '../Clock/Clock'
+import List from '../List/List'
 import './index.scss'
 import Tab from '../../components/tab/tab'
+import { CounterContext } from '../counter-context'
+
+import Child from '../child/child'
+import MouseTracker from '../render/MouseTracker'
+import PagePicker from '../../components/Picker/Picker'
+import Picks from '../../components/PickerView/PickerView'
+import PageView from '../../components/Slider/Slider'
+import { AtButton, AtFab, AtCalendar } from 'taro-ui'
+
 // !!! 组件引入路径直到文件名，而不是文件夹
+import CounterComponent from '../counter/CounterComponent'
+
+import { add, minus, asyncAdd } from '../../actions/counter'
+
+@connect(({ counter }) => ({
+  counter
+}), (dispatch) => ({
+  add () {
+    dispatch(add())
+  },
+  dec () {
+    dispatch(minus())
+  },
+  asyncAdd () {
+    dispatch(asyncAdd())
+  }
+}))
+// function mapStateToProps(state) {
+//   return {
+//     counter: state.counter.toJS()
+//   }
+// }
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     ...bindActionCreators(Actions, dispatch)
+//   }
+// }
+// @connect(mapStateToProps, mapDispatchToProps)
 
 export default class Index extends Component {
 
@@ -49,10 +91,39 @@ export default class Index extends Component {
     //
   }
   render() {
+    const [count, setCount] = useState(0)
+    console.log(count,'5888')
     return (
       <View className='index'>
         <Text>Hello world</Text>
-        <View className='title'>{this.state.title}</View>
+        <View className='todo'>
+        <Button className='add_btn' onClick={this.props.add}>+</Button>
+        <Button className='dec_btn' onClick={this.props.dec}>-</Button>
+        <Button className='dec_btn' onClick={this.props.asyncAdd}>async</Button>
+        <View>{this.props.counter.num}</View>
+        
+        </View>
+        <CounterComponent />
+        <PagePicker />
+        <PageView />
+        <AtCalendar isMultiSelect currentDate={{start: '2018/10/28', end:
+'2018/11/11'}}/>
+        <AtFab>
+          <Text className='at-fab__icon at-icon at-icon-menu'></Text>
+        </AtFab>
+        <AtButton className='my-button' type='primary'>按钮文案</AtButton>
+        {/* <Picks /> */}
+        {/* <MouseTracker/> */}
+        {/* <CounterContext.Provider value={ count }>
+          <View className='container'>
+            <Child />
+            <Text>{count}</Text>
+            <Button onClick={() => setCount(0)}>Reset</Button>
+            <Button onClick={() => setCount(prevCount => prevCount + 1)}>+</Button>
+            <Button onClick={() => setCount(prevCount => prevCount - 1)}>-</Button>
+          </View>
+        </CounterContext.Provider> */}
+        {/* <View className='title'>{this.state.title}</View>
         <View className='content'>
           {this.state.list.map(item => {
             return (
@@ -60,10 +131,12 @@ export default class Index extends Component {
             )
           })}
           <Button className='add' onClick={this.add}>添加</Button>
-        </View>
+        </View> */}
 
-      <MyComponent isEnable={true}/>
-      <Tab></Tab>
+      {/* <MyComponent isEnable={true} number={10}/> */}
+      {/* <Tab></Tab> */}
+      {/* <Clock currentIndex={1}/> */}
+      {/* <List /> */}
       </View>
     )
   }

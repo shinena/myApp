@@ -1,11 +1,15 @@
 import Taro, { Component } from "@tarojs/taro-h5";
+import { Provider } from "@tarojs/redux-h5";
+import configStore from "./store/index";
 
+import 'taro-ui/dist/style/index.scss';
 import './app.scss';
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
 //   require('nerv-devtools')
 // }
+// const store = configStore()
 import Nerv from "nervjs";
 import { Router, createHistory, mountApis } from '@tarojs/router';
 Taro.initPxTransform({
@@ -25,6 +29,7 @@ const _taroHistory = createHistory({
 });
 
 mountApis(_taroHistory);
+const store = configStore();
 class App extends Component {
   constructor() {
     super(...arguments);
@@ -56,11 +61,15 @@ class App extends Component {
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
   render() {
-    return <Router history={_taroHistory} routes={[{
-      path: '/pages/index/index',
-      componentLoader: () => import( /* webpackChunkName: "index_index" */'./pages/index/index'),
-      isIndex: true
-    }]} customRoutes={{}} />;
+    return <Provider store={store}>
+                  
+              <Router history={_taroHistory} routes={[{
+        path: '/pages/index/index',
+        componentLoader: () => import( /* webpackChunkName: "index_index" */'./pages/index/index'),
+        isIndex: true
+      }]} customRoutes={{}} />
+              
+                </Provider>;
   }
   config = {
     pages: ["/pages/index/index"],
